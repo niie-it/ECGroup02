@@ -27,13 +27,15 @@
 			<tr>
 				<td>
 					@item.TenHh
-				</td>				
+				</td>
 				<td>
 					@item.DonGia.Value.ToString("#,##0")
 				</td>
 				<td>
-					<img src="~/Hinh/HangHoa/@item.Hinh" alt="@item.TenHh" style="height: 100px;" />
-				</td>				
+					<a asp-action="Details" asp-route-id="@item.MaHh">
+						<img src="~/Hinh/HangHoa/@item.Hinh" alt="@item.TenHh" style="height: 100px;" />
+					</a>
+				</td>
 				<td>
 					<a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@item.MaHh" class="btn btn-primary">Mua</a>
 				</td>

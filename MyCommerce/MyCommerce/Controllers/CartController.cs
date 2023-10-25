@@ -47,8 +47,10 @@ namespace MyCommerce.Controllers
 				var hangHoa = _context.HangHoas.SingleOrDefault(h => h.MaHh == id);
 				if (hangHoa != null)
 				{
-					item = new CartItem {
-						MaHh = id, SoLuong = qty,
+					item = new CartItem
+					{
+						MaHh = id,
+						SoLuong = qty,
 						TenHh = hangHoa.TenHh,
 						DonGia = hangHoa.DonGia.Value,
 						Hinh = hangHoa.Hinh
@@ -60,6 +62,24 @@ namespace MyCommerce.Controllers
 			HttpContext.Session.Set("CART", gioHang);
 
 			// 2. Chuyển tới trang hiển thị giỏ hàng
+			return RedirectToAction("Index");
+		}
+
+		public IActionResult RemoveCart(int id)
+		{
+			var gioHang = CartItems;
+			var item = gioHang.SingleOrDefault(p => p.MaHh == id);
+			if (item != null)
+			{
+				gioHang.Remove(item);
+				HttpContext.Session.Set("CART", gioHang);
+			}
+			return RedirectToAction("Index");
+		}
+
+		public IActionResult EmptyCart()
+		{
+			HttpContext.Session.Set("CART", new List<CartItem>());
 			return RedirectToAction("Index");
 		}
 	}

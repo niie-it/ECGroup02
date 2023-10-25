@@ -27,15 +27,22 @@
 					</td>
 					<td>@item.TenHh</td>
 					<td>
-						<input value="@item.SoLuong" min="0"/>
+						<input value="@item.SoLuong" min="0" style="width:45px;" />
 					</td>
 					<td>@item.DonGia</td>
 					<td>@item.ThanhTien</td>
 					<td>
-						<a href="#">Xóa</a>
+						<a asp-action="RemoveCart" asp-route-id="@item.MaHh">
+							Xóa
+						</a>
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
+	<div>
+		<a asp-action="EmptyCart" class="btn btn-danger">
+			Xóa giỏ hàng
+		</a>
+	</div>
 </div>
