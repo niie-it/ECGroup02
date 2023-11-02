@@ -18,12 +18,8 @@ namespace MyCommerce.Controllers
 		{
 			get
 			{
-				var carts = HttpContext.Session.Get<List<CartItem>>("CART");
-				if (carts == null)
-				{
-					carts = new List<CartItem>();
-				}
-				return carts;
+				var carts = HttpContext.Session.Get<List<CartItem>>("CART") ?? new List<CartItem>();
+                return carts;
 			}
 		}
 
@@ -52,7 +48,7 @@ namespace MyCommerce.Controllers
 						MaHh = id,
 						SoLuong = qty,
 						TenHh = hangHoa.TenHh,
-						DonGia = hangHoa.DonGia.Value,
+						DonGia = hangHoa.DonGia ?? 0,
 						Hinh = hangHoa.Hinh
 					};
 					gioHang.Add(item);
