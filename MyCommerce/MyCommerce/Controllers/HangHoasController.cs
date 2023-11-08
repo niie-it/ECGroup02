@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,8 @@ namespace MyCommerce.Controllers
         }
 
         // GET: HangHoas/Create
+
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["MaLoai"] = new SelectList(_context.Loais, "MaLoai", "MaLoai");

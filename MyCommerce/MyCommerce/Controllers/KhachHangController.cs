@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using MyCommerce.Data;
 using MyCommerce.Helpers;
 using MyCommerce.Models;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace MyCommerce.Controllers
 {
@@ -48,5 +52,51 @@ namespace MyCommerce.Controllers
             }
 
         }
+
+        public IActionResult DangNhap()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DangNhap(LoginVM model)
+        {
+            var kh = _ctx.KhachHangs.SingleOrDefault(p => p.MaKh == model.UserName);
+            if (kh == null)
+            {
+                ViewBag.Message = "Không tồn tại user này";
+                return View();
+            }
+            if (kh.MatKhau != model.Password.ToMd5Hash(kh.RandomKey))
+            {
+                ViewBag.Message = "Sai thông tin đăng nhập";
+                return View();
+            }
+
+            // khai báo claims
+            var claims = new List<Claim> { 
+                new Claim(ClaimTypes.Name, kh.HoTen),
+                new Claim(ClaimTypes.Email, kh.Email),
+
+                // làm động danh sách Roles
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Role, "Accountant"),
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var princial = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync(princial);
+
+            return Redirect("/");
+        }
+
+        public async Task<IActionResult> DangXuat()
+        {
+            await HttpContext.SignOutAsync();
+			return Redirect("/");
+		}
     }
 }
