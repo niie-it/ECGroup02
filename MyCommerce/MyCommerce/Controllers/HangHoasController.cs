@@ -26,8 +26,23 @@ namespace MyCommerce.Controllers
             return View(await myeStoreContext.ToListAsync());
         }
 
-        // GET: HangHoas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet("/san-pham/{tenloai}/{tensp}")]
+		public async Task<IActionResult> ProductDetails(string tensp)
+		{
+			var hangHoa = await _context.HangHoas
+				.Include(h => h.MaLoaiNavigation)
+				.Include(h => h.MaNccNavigation)
+				.FirstOrDefaultAsync(m => m.TenAlias == tensp);
+			if (hangHoa == null)
+			{
+				return NotFound();
+			}
+
+			return View("Details", hangHoa);
+		}
+
+		// GET: HangHoas/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.HangHoas == null)
             {
